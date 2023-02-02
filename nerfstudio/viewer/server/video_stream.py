@@ -14,6 +14,7 @@
 
 """Video Stream objects for WebRTC"""
 
+import imageio
 import numpy as np
 from aiortc import VideoStreamTrack
 from av import VideoFrame
@@ -34,6 +35,7 @@ class SingleFrameStreamTrack(VideoStreamTrack):
         Args:
             frame: image to be viewed
         """
+        imageio.imwrite("image_hamit.jpg", frame)
         self.frame = VideoFrame.from_ndarray(frame)
 
     async def recv(self):
