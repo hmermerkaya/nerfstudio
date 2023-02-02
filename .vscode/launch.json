@@ -38,6 +38,56 @@
         "--logging.event-writer=wandb"
       ]
     },
+
+
+    {
+      "name": "Python: render",
+      "type": "python",
+      "request": "launch",
+      "program": "scripts/render.py",
+      "console": "integratedTerminal",
+      "args": [
+        "--load-config=/home/hamit/Softwares/nerfstudio/outputs/-home-hamit-Softwares-nerfstudio-data-nerfstudio-poster/nerfacto/2023-02-06_131432/config.yml",
+        "--traj=filename",
+        "--camera-path-filename=/home/hamit/Softwares/nerfstudio/data/nerfstudio/poster/camera_paths/2023-02-06_131432.json",
+        "--output-path=home/hamit/Softwares/nerfstudio/renders/poster/2023-02-06_131432.mp4"
+      ]
+    },
+
+    {
+      "name": "Python: nerfacto",
+      "type": "python",
+      "request": "launch",
+      "program": "scripts/train.py",
+      "console": "integratedTerminal",
+      "args": [
+        "nerfacto",
+        "--data=/home/hamit/Softwares/nerfstudio/data/nerfstudio/poster",
+        "--viewer.websocket-port=7018",
+        "--load-dir=/home/hamit/Softwares/nerfstudio/outputs/-home-hamit-Softwares-nerfstudio-data-nerfstudio-poster/nerfacto/2023-02-03_121037/nerfstudio_models",
+         "--viewer.start_train=False"
+        
+      ]
+    },
+
+    {
+      "name": "Python: nerfacto render",
+      "type": "python",
+      "request": "launch",
+      "program": "scripts/render_view.py",
+      "console": "integratedTerminal",
+      "args": [
+        "nerfacto",
+       // "--data=/home/hamit/Softwares/nerfstudio/data/nerfstudio/poster",
+        "--viewer.websocket-port=7021",
+        "--load-dir=/home/hamit/Softwares/nerfstudio/outputs/-home-hamit-Softwares-nerfstudio-data-nerfstudio-poster/nerfacto/2023-02-03_121037/config.yml",
+         "--viewer.start_train=False"
+        
+      ]
+    },
+
+
+
     {
       "name": "Python: train ngp",
       "type": "python",
