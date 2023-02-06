@@ -95,62 +95,63 @@ export function BasicTabs(props: BasicTabsProps) {
     }
   }, [camera_choice]);
 
-  return (
-    <div>
-      <StatusPanel sceneTree={sceneTree} />
-      <Divider />
-      <Box sx={{ width: '100%' }}>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <Tabs
-            value={value}
-            onChange={handleChange}
-            aria-label="panel tabs"
-            centered
-          >
-            <Tab icon={<TuneRounded />} label="Controls" {...a11yProps(0)} />
-            <Tab icon={<CameraAltRounded />} label="Render" {...a11yProps(1)} />
-            <Tab
-              icon={<WidgetsRounded />}
-              label="Scene"
-              disabled={camera_choice === 'Render Camera'}
-              {...a11yProps(2)}
-            />
-            <Tab
-              icon={<ImportExportRounded />}
-              label="Export"
-              disabled={camera_choice === 'Render Camera'}
-              {...a11yProps(3)}
-            />
-          </Tabs>
-        </Box>
-        <TabPanel value={value} index={0}>
-          <div className="Leva-container">
-            <RenderControls />
-            <Leva
-              className="Leva-panel"
-              theme={LevaTheme}
-              titleBar={false}
-              fill
-              flat
-            />
-          </div>
-        </TabPanel>
-        <TabPanel value={value} index={1}>
-          <CameraPanel
-            sceneTree={sceneTree}
-            // camera_controls={sceneTree.metadata.camera_controls}
-          />
-        </TabPanel>
-        <TabPanel value={value} index={2}>
-          <div className="Scene-container">
-            <ScenePanel sceneTree={sceneTree} />
-          </div>
-        </TabPanel>
+  return 
+  //(
+    // <div>
+    //   <StatusPanel sceneTree={sceneTree} />
+    //   <Divider />
+    //   <Box sx={{ width: '100%' }}>
+    //     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+    //       <Tabs
+    //         value={value}
+    //         onChange={handleChange}
+    //         aria-label="panel tabs"
+    //         centered
+    //       >
+    //         <Tab icon={<TuneRounded />} label="Controls" {...a11yProps(0)} />
+    //         <Tab icon={<CameraAltRounded />} label="Render" {...a11yProps(1)} />
+    //         <Tab
+    //           icon={<WidgetsRounded />}
+    //           label="Scene"
+    //           disabled={camera_choice === 'Render Camera'}
+    //           {...a11yProps(2)}
+    //         />
+    //         <Tab
+    //           icon={<ImportExportRounded />}
+    //           label="Export"
+    //           disabled={camera_choice === 'Render Camera'}
+    //           {...a11yProps(3)}
+    //         />
+    //       </Tabs>
+    //     </Box>
+    //     <TabPanel value={value} index={0}>
+    //       <div className="Leva-container">
+    //         <RenderControls />
+    //         <Leva
+    //           className="Leva-panel"
+    //           theme={LevaTheme}
+    //           titleBar={false}
+    //           fill
+    //           flat
+    //         />
+    //       </div>
+    //     </TabPanel>
+    //     <TabPanel value={value} index={1}>
+    //       <CameraPanel
+    //         sceneTree={sceneTree}
+    //         // camera_controls={sceneTree.metadata.camera_controls}
+    //       />
+    //     </TabPanel>
+    //     <TabPanel value={value} index={2}>
+    //       <div className="Scene-container">
+    //         <ScenePanel sceneTree={sceneTree} />
+    //       </div>
+    //     </TabPanel>
 
-        <TabPanel value={value} index={3}>
-          <ExportPanel sceneTree={sceneTree} showExportBox={showExportBox} />
-        </TabPanel>
-      </Box>
-    </div>
-  );
+    //     <TabPanel value={value} index={3}>
+    //       <ExportPanel sceneTree={sceneTree} showExportBox={showExportBox} />
+    //     </TabPanel>
+    //   </Box>
+    // </div>
+ // );
 }

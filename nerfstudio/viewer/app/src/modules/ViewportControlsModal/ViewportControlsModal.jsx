@@ -11,7 +11,7 @@ export default function ControlsModal() {
 
   return (
     <div className="LandingModal">
-      <Button
+      {/* <Button
         className="banner-button"
         variant="outlined"
         size="small"
@@ -19,7 +19,7 @@ export default function ControlsModal() {
         onClick={handleOpen}
       >
         Viewport Controls
-      </Button>
+      </Button> */}
       <Modal
         open={open}
         onClose={handleClose}

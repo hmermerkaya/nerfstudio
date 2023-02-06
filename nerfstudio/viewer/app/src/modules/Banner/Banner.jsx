@@ -37,7 +37,7 @@ export default function Banner() {
   return (
     <div className="banner">
       <LandingModal initial_state={open_modal} />
-      <Button // button with view in ar icon
+      {/* <Button // button with view in ar icon
         className="banner-button"
         variant="outlined"
         startIcon={<GitHubIcon />}
@@ -46,8 +46,8 @@ export default function Banner() {
         size="small"
       >
         Github
-      </Button>
-      <Button // button with view in ar icon
+      </Button> */}
+      {/* <Button // button with view in ar icon
         className="banner-button"
         variant="outlined"
         startIcon={<DescriptionRoundedIcon />}
@@ -56,16 +56,16 @@ export default function Banner() {
         size="small"
       >
         Documentation
-      </Button>
+      </Button> */}
       <ViewportControlsModal />
 
-      <div className="banner-logo">
+      {/* <div className="banner-logo">
         <img
           style={{ height: 30, margin: 'auto' }}
           src="https://docs.nerf.studio/en/latest/_images/logo-dark.png"
           alt="The favicon."
         />
-      </div>
+      </div> */}
     </div>
   );
 }

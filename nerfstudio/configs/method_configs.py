@@ -74,10 +74,12 @@ descriptions = {
     "nerfplayer-ngp": "NeRFPlayer with InstantNGP backbone.",
 }
 
+
+
 method_configs["nerfacto"] = TrainerConfig(
     method_name="nerfacto",
     steps_per_eval_batch=500,
-    steps_per_save=2000,
+    steps_per_save=200,
     max_num_iterations=30000,
     mixed_precision=True,
     pipeline=VanillaPipelineConfig(

@@ -287,7 +287,7 @@ export function get_scene_tree() {
       sceneTree.delete([CAMERAS_NAME]);
     }
   };
-  subscribe_to_changes(selector_fn_cameras, fn_value_cameras);
+ // subscribe_to_changes(selector_fn_cameras, fn_value_cameras);
 
   // Check for clicks on training cameras
   const mouseVector = new THREE.Vector2();

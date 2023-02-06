@@ -82,14 +82,14 @@ export default function LandingModel(props: LandingModalProps) {
 
   return (
     <div className="LandingModal">
-      <Button
+      {/* <Button
         className="banner-button"
         variant="outlined"
         size="small"
         onClick={handleOpen}
       >
         Getting Started
-      </Button>
+      </Button> */}
       <Modal
         open={open}
         onClose={handleClose}

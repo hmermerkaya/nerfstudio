@@ -39,18 +39,18 @@ function CameraToggle() {
       aria-label="camera view"
       size="small"
     >
-      <ToggleButton value="Main Camera" disableRipple sx={{ width: '160px' }}>
+      {/* <ToggleButton value="Main Camera" disableRipple sx={{ width: '160px' }}>
         <ThreeDRotationIcon fontSize="small" sx={{ mr: 1, ml: -0.5 }} />
         Viewport
-      </ToggleButton>
-      <ToggleButton value="Render Camera" disableRipple sx={{ width: '160px' }}>
+      </ToggleButton> */}
+      {/* <ToggleButton value="Render Camera" disableRipple sx={{ width: '160px' }}>
         <VideoCameraBackIcon
           value="Render Camera"
           fontSize="small"
           sx={{ mr: 1, ml: 0.5 }}
         />
         Render View
-      </ToggleButton>
+      </ToggleButton> */}
     </ToggleButtonGroup>
   );
 }

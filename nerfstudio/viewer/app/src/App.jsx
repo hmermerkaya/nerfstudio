@@ -27,9 +27,9 @@ export default function App() {
         <div className="App-body">
           {/* Order matters here. The viewer window must be rendered first. */}
           <ViewerWindow sceneTree={sceneTree} />
-          <div className="SidePanel">
+          {/* <div className="SidePanel">
             <BasicTabs sceneTree={sceneTree} />
-          </div>
+          </div> */}
         </div>
       </div>
     </ThemeProvider>
