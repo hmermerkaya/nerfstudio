@@ -281,7 +281,7 @@ class ViewerState:
             CONSOLE.line()
             version = get_viewer_version()
             websocket_url = f"ws://localhost:{self.config.websocket_port}"
-            self.viewer_url = f"http://localhost:4000/?websocket_url={websocket_url}"
+            self.viewer_url = f"http://localhost:4001/?websocket_url={websocket_url}"
             # self.viewer_url = f"https://viewer.nerf.studio/versions/{version}/?websocket_url={websocket_url}"
             CONSOLE.rule(characters="=")
             CONSOLE.print(f"[Public] Open the viewer at {self.viewer_url}")
@@ -1018,7 +1018,7 @@ class ViewerStateForRender:
             CONSOLE.line()
             version = get_viewer_version()
             websocket_url = f"ws://localhost:{self.config.websocket_port}"
-            self.viewer_url = f"http://localhost:4000/?websocket_url={websocket_url}"
+            self.viewer_url = f"http://localhost:4001/?websocket_url={websocket_url}"
             # self.viewer_url = f"https://viewer.nerf.studio/versions/{version}/?websocket_url={websocket_url}"
             CONSOLE.rule(characters="=")
             CONSOLE.print(f"[Public] Open the viewer at {self.viewer_url}")
@@ -1090,9 +1090,9 @@ class ViewerStateForRender:
         # self.vis["renderingState/data_base_dir"].write(str(self.datapath))
 
         # get the timestamp of the train run to set default export path name
-        timestamp_reg = re.compile("[0-9]{4}-[0-9]{2}-[0-9]{2}_[0-9]{6}")
-        timestamp_match = timestamp_reg.findall(str(self.log_filename.parents[0]))
-        self.vis["renderingState/export_path"].write(timestamp_match[-1])
+        # timestamp_reg = re.compile("[0-9]{4}-[0-9]{2}-[0-9]{2}_[0-9]{6}")
+        # timestamp_match = timestamp_reg.findall(str(self.log_filename.parents[0]))
+        # self.vis["renderingState/export_path"].write(timestamp_match[-1])
 
         # clear the current scene
         self.vis["sceneState/sceneBox"].delete()
@@ -1226,7 +1226,7 @@ class ViewerStateForRender:
         else:
             graph.render_aabb = None
 
-    def update_scene(self, step: int, graph: Model, num_rays_per_batch: int) -> None:
+    def update_scene(self, trainer, step: int, graph: Model, num_rays_per_batch: int) -> None:
         """updates the scene based on the graph weights
 
         Args:
@@ -1239,8 +1239,8 @@ class ViewerStateForRender:
         is_training = self.vis["renderingState/isTraining"].read()
         self.step = step
 
-        # self._check_camera_path_payload(trainer, step)
-        # self._check_populate_paths_payload(trainer, step)
+        self._check_camera_path_payload(trainer, step)
+        self._check_populate_paths_payload(trainer, step)
         self._check_webrtc_offer()
 
         camera_object = self._get_camera_object()
@@ -1645,7 +1645,7 @@ class ViewerStateForRender:
 
         # Calculate camera pose and intrinsics
         try:
-            image_height, image_width = self._calculate_image_res(camera_object, is_training)
+            image_height, image_width = 50, 100 #self._calculate_image_res(camera_object, is_training)
         except ZeroDivisionError as e:
             self.vis["renderingState/log_errors"].write("Error: Screen too small; no rays intersecting scene.")
             time.sleep(0.03)  # sleep to allow buffer to reset
@@ -1723,6 +1723,6 @@ class ViewerStateForRender:
         if outputs is not None:
             colors = graph.colors if hasattr(graph, "colors") else None
             self._send_output_to_viewer(outputs, colors=colors)
-            self._update_viewer_stats(
-                vis_t.duration, num_rays=len(camera_ray_bundle), image_height=image_height, image_width=image_width
-            )
+            # self._update_viewer_stats(
+            #     vis_t.duration, num_rays=len(camera_ray_bundle), image_height=image_height, image_width=image_width
+            # )

@@ -35,9 +35,9 @@
       "args": [
         "nerfacto",
         "--data=/home/hamit/Softwares/nerfstudio/data/nerfstudio/poster",
-        "--viewer.websocket-port=7018",
+        "--viewer.websocket-port=7030",
         "--load-dir=/home/hamit/Softwares/nerfstudio/outputs/-home-hamit-Softwares-nerfstudio-data-nerfstudio-poster/nerfacto/2023-02-03_121037/nerfstudio_models",
-        // "--viewer.start_train=False"
+         "--viewer.start_train=False"
         
       ]
     },
@@ -52,7 +52,7 @@
        // "--load-dir=/home/hamit/Softwares/nerfstudio/outputs/-home-hamit-Softwares-nerfstudio-data-nerfstudio-poster/nerfacto/2023-02-06_113940/nerfstudio_models",
        // "--load-dir=/home/hamit/Softwares/nerfstudio/outputs/-home-hamit-Softwares-nerfstudio-data-nerfstudio-poster/nerfacto/2023-02-04_122845/nerfstudio_models",
         "--load-dir=/home/hamit/Softwares/nerfstudio/outputs/-home-hamit-Softwares-nerfstudio-data-nerfstudio-poster/nerfacto/2023-02-03_121037/config.yml",
-        "--viewer.websocket-port=7014",
+        "--viewer.websocket-port=7029",
         "--viewer.start_train=False"
     
     

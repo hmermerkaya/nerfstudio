@@ -185,7 +185,7 @@ class VanillaPipelineConfig(cfg.InstantiateConfig):
 
     _target: Type = field(default_factory=lambda: VanillaPipeline)
     """target class to instantiate"""
-    datamanager: VanillaDataManagerConfig = VanillaDataManagerConfig()
+   # datamanager: VanillaDataManagerConfig = VanillaDataManagerConfig()
     # """specifies the datamanager config"""
     model: ModelConfig = ModelConfig()
     """specifies the model config"""

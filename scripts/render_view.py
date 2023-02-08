@@ -47,7 +47,7 @@ from rich.console import Console
 
 from nerfstudio.configs.config_utils import convert_markup_to_ansi
 from nerfstudio.configs.method_configs_render_view import AnnotatedBaseConfigUnion
-from nerfstudio.engine.render_viewer import RenderViewerConfig
+from nerfstudio.engine.render_viewer import TrainerConfig
 from nerfstudio.utils import comms, profiler
 
 CONSOLE = Console(width=120)
@@ -73,7 +73,7 @@ def _set_random_seed(seed) -> None:
     torch.manual_seed(seed)
 
 
-def render_loop(local_rank: int, world_size: int, config: RenderViewerConfig, global_rank: int = 0):
+def render_loop(local_rank: int, world_size: int, config: TrainerConfig, global_rank: int = 0):
     """Main training function that sets up and runs the trainer per process
 
     Args:
@@ -94,7 +94,7 @@ def _distributed_worker(
     num_gpus_per_machine: int,
     machine_rank: int,
     dist_url: str,
-    config: RenderViewerConfig,
+    config: TrainerConfig,
     timeout: timedelta = DEFAULT_TIMEOUT,
 ) -> Any:
     """Spawned distributed worker that handles the initialization of process group and handles the
@@ -149,7 +149,7 @@ def launch(
     num_machines: int = 1,
     machine_rank: int = 0,
     dist_url: str = "auto",
-    config: Optional[RenderViewerConfig] = None,
+    config: Optional[TrainerConfig] = None,
     timeout: timedelta = DEFAULT_TIMEOUT,
 ) -> None:
     """Function that spawns muliple processes to call on main_func
@@ -214,7 +214,7 @@ def launch(
             profiler.flush_profiler(config.logging)
 
 
-def main(config: RenderViewerConfig) -> None:
+def main(config: TrainerConfig) -> None:
     """Main function."""
 
     config.set_timestamp()

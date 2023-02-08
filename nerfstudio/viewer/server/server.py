@@ -45,6 +45,7 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):  # pylint: disable=a
 
     def open(self, *args: str, **kwargs: str):
         """open websocket bridge"""
+        
         self.bridge.websocket_pool.add(self)
         print("opened:", self, file=sys.stderr)
         self.bridge.send_scene(self)
@@ -111,7 +112,7 @@ class ZMQWebSocketBridge:
         self.zmq_socket, self.zmq_stream, self.zmq_url = self.setup_zmq(zmq_url)
 
         # websocket
-        listen_kwargs = {"address": "0.0.0.0"}
+        listen_kwargs = {"address": "0.0.0.0"}        
         self.app.listen(websocket_port, **listen_kwargs)
         self.websocket_port = websocket_port
         self.websocket_url = f"0.0.0.0:{self.websocket_port}"

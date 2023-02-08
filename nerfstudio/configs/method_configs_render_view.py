@@ -43,9 +43,8 @@ from nerfstudio.data.dataparsers.phototourism_dataparser import (
     PhototourismDataParserConfig,
 )
 from nerfstudio.engine.optimizers import AdamOptimizerConfig, RAdamOptimizerConfig
-from nerfstudio.engine.render_viewer import RenderViewerConfig
+from nerfstudio.engine.render_viewer import TrainerConfig
 from nerfstudio.engine.schedulers import SchedulerConfig
-from nerfstudio.engine.render_viewer import RenderViewerConfig
 from nerfstudio.field_components.temporal_distortions import TemporalDistortionKind
 from nerfstudio.models.depth_nerfacto import DepthNerfactoModelConfig
 from nerfstudio.models.instant_ngp import InstantNGPModelConfig
@@ -59,7 +58,7 @@ from nerfstudio.models.vanilla_nerf import NeRFModel, VanillaModelConfig
 from nerfstudio.pipelines.base_pipeline_render_view import VanillaPipelineConfig
 from nerfstudio.pipelines.dynamic_batch_render_view import DynamicBatchPipelineConfig
 
-method_configs: Dict[str, RenderViewerConfig] = {}
+method_configs: Dict[str, TrainerConfig] = {}
 descriptions = {
     "nerfacto": "Recommended real-time model tuned for real captures. This model will be continually updated.",
     "depth-nerfacto": "Nerfacto with depth supervision.",
@@ -75,7 +74,7 @@ descriptions = {
     "nerfplayer-ngp": "NeRFPlayer with InstantNGP backbone.",
 }
 
-method_configs["nerfacto-render"] = RenderViewerConfig(
+method_configs["nerfacto-render"] = TrainerConfig(
     method_name="nerfacto-render",
     pipeline=VanillaPipelineConfig(
         # datamanager=VanillaDataManagerConfig(
@@ -102,7 +101,7 @@ method_configs["nerfacto-render"] = RenderViewerConfig(
     vis="viewer",
 )
 
-method_configs["nerfacto"] = RenderViewerConfig(
+method_configs["nerfacto"] = TrainerConfig(
     method_name="nerfacto",
     pipeline=VanillaPipelineConfig(
         # datamanager=VanillaDataManagerConfig(

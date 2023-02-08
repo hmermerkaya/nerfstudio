@@ -54,10 +54,10 @@ CONSOLE = Console(width=120)
 
 
 @dataclass
-class RenderViewerConfig(ExperimentConfig):
+class TrainerConfig(ExperimentConfig):
     """Configuration for training regimen"""
 
-    _target: Type = field(default_factory=lambda: RenderViewer)
+    _target: Type = field(default_factory=lambda: Trainer)
     """target class to instantiate"""
     # steps_per_save: int = 1000
     # """Number of steps between saves."""
@@ -81,7 +81,7 @@ class RenderViewerConfig(ExperimentConfig):
     load_config: Optional[Path] = None
 
 
-class RenderViewer:
+class Trainer:
     """Trainer class
 
     Args:
@@ -103,7 +103,7 @@ class RenderViewer:
     optimizers: Optimizers
     #  callbacks: List[TrainingCallback]
 
-    def __init__(self, config: RenderViewerConfig, local_rank: int = 0, world_size: int = 1):
+    def __init__(self, config: TrainerConfig, local_rank: int = 0, world_size: int = 1):
         self.config = config
         self.local_rank = local_rank
         self.world_size = world_size
@@ -112,9 +112,9 @@ class RenderViewer:
         if self.device == "cpu":
             self.mixed_precision = False
             CONSOLE.print("Mixed precision is disabled for CPU training.")
-        self._start_step = 0
+        self._start_step = 10
         # optimizers
-        self.grad_scaler = GradScaler(enabled=self.mixed_precision)
+        # self.grad_scaler = GradScaler(enabled=self.mixed_precision)
 
         #self.base_dir = config.get_base_dir()
         # directory to save checkpoints
@@ -175,16 +175,16 @@ class RenderViewer:
                 'test': loads train/test datasets into memory
                 'inference': does not load any dataset into memory
         """
-        self.load_checkpoint()
+        self._load_checkpoint()
         
-        self.config.pipeline.datamanager.eval_image_indices = None
-        self.pipeline = self.config.pipeline.setup(
-            device=self.device, test_mode=test_mode
-            #, world_size=self.world_size, local_rank=self.local_rank
-        )
+        # self.config.pipeline.datamanager.eval_image_indices = None
+        # self.pipeline = self.config.pipeline.setup(
+        #     device=self.device, test_mode=test_mode
+        #     #, world_size=self.world_size, local_rank=self.local_rank
+        # )
 
-        self.pipeline.eval()
-        checkpoint_path = RenderViewer.eval_load_checkpoint(self.config, self.pipeline)
+        # self.pipeline.eval()
+        # checkpoint_path = RenderViewer.eval_load_checkpoint(self.config, self.pipeline)
         
 
 
@@ -224,6 +224,9 @@ class RenderViewer:
         # self.pipeline.datamanager.train_dataparser_outputs.save_dataparser_transform(
         #     self.base_dir / "dataparser_transforms.json"
         # )
+
+
+
 
         self._init_viewer_state()
         # with TimeWriter(writer, EventName.TOTAL_TRAIN_TIME):
@@ -318,17 +321,17 @@ class RenderViewer:
         Args:
             step: current train step
         """
-        assert self.viewer_state is not None
-        with TimeWriter(writer_render_view, EventName.ITER_VIS_TIME, step=step) as _:
+        # assert self.viewer_state is not None
+       # with TimeWriter(writer_render_view, EventName.ITER_VIS_TIME, step=step) as _:
             # num_rays_per_batch = self.config.pipeline.datamanager.train_num_rays_per_batch
-            try:
-                self.viewer_state.update_scene(self, step, self.model, 4096)
-            except RuntimeError:
-                time.sleep(0.03)  # sleep to allow buffer to reset
-                assert self.viewer_state.vis is not None
-                self.viewer_state.vis["renderingState/log_errors"].write(
-                    "Error: GPU out of memory. Reduce resolution to prevent viewer from crashing."
-                )
+        try:
+            self.viewer_state.update_scene(self, step, self.pipeline.model, 4096)
+        except RuntimeError:
+            time.sleep(0.03)  # sleep to allow buffer to reset
+                # assert self.viewer_state.vis is not None
+                # self.viewer_state.vis["renderingState/log_errors"].write(
+                #     "Error: GPU out of memory. Reduce resolution to prevent viewer from crashing."
+                # )
 
     @check_viewer_enabled
     def _update_viewer_rays_per_sec(self, train_t: TimeWriter, vis_t: TimeWriter, step: int):
@@ -350,32 +353,32 @@ class RenderViewer:
     def load_checkpoint(self) -> None:
         self.config = yaml.load(self.config.load_dir.read_text(), Loader=yaml.Loader)
     
-    def _load_checkpoint(self) -> None:
-        """Helper function to load pipeline and optimizer from prespecified checkpoint"""
-        load_dir = self.config.load_dir
-        if load_dir is not None:
-            load_step = self.config.load_step
-            if load_step is None:
-                print("Loading latest checkpoint from load_dir")
-                # NOTE: this is specific to the checkpoint name format
-                load_step = sorted(int(x[x.find("-") + 1 : x.find(".")]) for x in os.listdir(load_dir))[-1]
-            load_path = load_dir / f"step-{load_step:09d}.ckpt"
-            assert load_path.exists(), f"Checkpoint {load_path} does not exist"
-            loaded_state = torch.load(load_path, map_location="cpu")
-            self._start_step = loaded_state["step"] + 1
+#     def _load_checkpoint(self) -> None:
+#         """Helper function to load pipeline and optimizer from prespecified checkpoint"""
+#         load_dir = self.config.load_dir
+#         if load_dir is not None:
+#             load_step = self.config.load_step
+#             if load_step is None:
+#                 print("Loading latest checkpoint from load_dir")
+#                 # NOTE: this is specific to the checkpoint name format
+#                 load_step = sorted(int(x[x.find("-") + 1 : x.find(".")]) for x in os.listdir(load_dir))[-1]
+#             load_path = load_dir / f"step-{load_step:09d}.ckpt"
+#             assert load_path.exists(), f"Checkpoint {load_path} does not exist"
+#             loaded_state = torch.load(load_path, map_location="cpu")
+#             self._start_step = loaded_state["step"] + 1
             
-            # state = {key.replace("module.", ""): value for key, value in loaded_state.items()}
+#             # state = {key.replace("module.", ""): value for key, value in loaded_state.items()}
             
             
 
 
-            # load the checkpoints for pipeline, optimizers, and gradient scalar
-#            self.pipeline.load_pipeline(loaded_state["pipeline"], loaded_state["step"])
-            self.optimizers.load_optimizers(loaded_state["optimizers"])
-            self.grad_scaler.load_state_dict(loaded_state["scalers"])
-            CONSOLE.print(f"done loading checkpoint from {load_path}")
-        else:
-            CONSOLE.print("No checkpoints to load, training from scratch")
+#             # load the checkpoints for pipeline, optimizers, and gradient scalar
+# #            self.pipeline.load_pipeline(loaded_state["pipeline"], loaded_state["step"])
+#             self.optimizers.load_optimizers(loaded_state["optimizers"])
+#             self.grad_scaler.load_state_dict(loaded_state["scalers"])
+#             CONSOLE.print(f"done loading checkpoint from {load_path}")
+#         else:
+#             CONSOLE.print("No checkpoints to load, training from scratch")
 
     @check_main_thread
     def save_checkpoint(self, step: int) -> None:
@@ -462,3 +465,39 @@ class RenderViewer:
         if step_check(step, self.config.steps_per_eval_all_images):
             metrics_dict = self.pipeline.get_average_eval_image_metrics(step=step)
             writer_render_view.put_dict(name="Eval Images Metrics Dict (all images)", scalar_dict=metrics_dict, step=step)
+
+    def _load_checkpoint(self) -> None:
+        """Helper function to load pipeline and optimizer from prespecified checkpoint"""
+
+        config:TrainerConfig = yaml.load(self.config.load_dir.read_text(), Loader=yaml.Loader)
+        #assert isinstance(config, TrainerConfig)
+        config.load_dir = config.get_checkpoint_dir()
+        
+        config.pipeline.datamanager.eval_image_indices = None
+        #config.pipeline.datamanager=None
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.pipeline = config.pipeline.setup(device=device, test_mode="inference")
+        #self.pipeline.setup(device=device, test_mode="inference")
+        #assert isinstance(self.pipeline, Pipeline)
+        self.pipeline.eval()
+
+        assert config.load_dir is not None
+        if config.load_step is None:
+            CONSOLE.print("Loading latest checkpoint from load_dir")
+            # NOTE: this is specific to the checkpoint name format
+            if not os.path.exists(config.load_dir):
+                CONSOLE.rule("Error", style="red")
+                CONSOLE.print(f"No checkpoint directory found at {config.load_dir}, ", justify="center")
+                CONSOLE.print(
+                    "Please make sure the checkpoint exists, they should be generated periodically during training",
+                    justify="center",
+                )
+                sys.exit(1)
+            load_step = sorted(int(x[x.find("-") + 1 : x.find(".")]) for x in os.listdir(config.load_dir))[-1]
+        else:
+            load_step = config.load_step
+        load_path = config.load_dir / f"step-{load_step:09d}.ckpt"
+        assert load_path.exists(), f"Checkpoint {load_path} does not exist"
+        loaded_state = torch.load(load_path, map_location="cpu")
+        self.pipeline.load_pipeline(loaded_state["pipeline"], loaded_state["step"])
+        CONSOLE.print(f":white_check_mark: Done loading checkpoint from {load_path}")

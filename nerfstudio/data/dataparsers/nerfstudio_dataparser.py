@@ -76,12 +76,16 @@ class Nerfstudio(DataParser):
     def _generate_dataparser_outputs(self, split="train"):
         # pylint: disable=too-many-statements
 
+         
         if self.config.data.suffix == ".json":
             meta = load_from_json(self.config.data)
             data_dir = self.config.data.parent
         else:
+            # meta =load_from_json('/home/hamit/Softwares/nerfstudio/data/nerfstudio/poste/transforms.json')
             meta = load_from_json(self.config.data / "transforms.json")
             data_dir = self.config.data
+        
+        
 
         image_filenames = []
         mask_filenames = []
