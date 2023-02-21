@@ -281,7 +281,7 @@ class ViewerState:
             CONSOLE.line()
             version = get_viewer_version()
             websocket_url = f"ws://localhost:{self.config.websocket_port}"
-            self.viewer_url = f"http://localhost:4001/?websocket_url={websocket_url}"
+            self.viewer_url = f"http://localhost:4000/?websocket_url={websocket_url}"
             # self.viewer_url = f"https://viewer.nerf.studio/versions/{version}/?websocket_url={websocket_url}"
             CONSOLE.rule(characters="=")
             CONSOLE.print(f"[Public] Open the viewer at {self.viewer_url}")
@@ -822,11 +822,13 @@ class ViewerState:
             )
         else:
             return None, None
+        print(f'train_rays_per_sec is {train_rays_per_sec}')
+
         if EventName.VIS_RAYS_PER_SEC.value in GLOBAL_BUFFER["events"]:
             vis_rays_per_sec = GLOBAL_BUFFER["events"][EventName.VIS_RAYS_PER_SEC.value]["avg"]
         else:
             vis_rays_per_sec = train_rays_per_sec
-
+        print(f'vis_rays_per_sec is {vis_rays_per_sec}')
         current_fps = self.moving_fps if self.camera_moving else self.static_fps
 
         # calculate number of rays that can be rendered given the target fps
@@ -845,7 +847,7 @@ class ViewerState:
             image_width = self.max_resolution
             image_height = int(image_width / aspect_ratio)
 
-        image_height, image_width = 50, 100
+        #image_height, image_width = 50, 100
         return image_height, image_width
 
     def _process_invalid_output(self, output_type: str) -> str:
@@ -1018,7 +1020,7 @@ class ViewerStateForRender:
             CONSOLE.line()
             version = get_viewer_version()
             websocket_url = f"ws://localhost:{self.config.websocket_port}"
-            self.viewer_url = f"http://localhost:4001/?websocket_url={websocket_url}"
+            self.viewer_url = f"http://localhost:4000/?websocket_url={websocket_url}"
             # self.viewer_url = f"https://viewer.nerf.studio/versions/{version}/?websocket_url={websocket_url}"
             CONSOLE.rule(characters="=")
             CONSOLE.print(f"[Public] Open the viewer at {self.viewer_url}")
@@ -1551,20 +1553,22 @@ class ViewerStateForRender:
             if target_train_util is None:
                 target_train_util = 0.9
 
-        if EventName.TRAIN_RAYS_PER_SEC.value in GLOBAL_BUFFER["events"]:
-            train_rays_per_sec = GLOBAL_BUFFER["events"][EventName.TRAIN_RAYS_PER_SEC.value]["avg"]
-        elif not is_training:
+        #if EventName.TRAIN_RAYS_PER_SEC.value in GLOBAL_BUFFER["events"]:
+        #    train_rays_per_sec = GLOBAL_BUFFER["events"][EventName.TRAIN_RAYS_PER_SEC.value]["avg"]
+       # print("is training:", is_training)
+        if not is_training:
             train_rays_per_sec = (
-                80000  # TODO(eventually find a way to not hardcode. case where there are no prior training steps)
+                160000  # TODO(eventually find a way to not hardcode. case where there are no prior training steps)
             )
         else:
             return None, None
-        if EventName.VIS_RAYS_PER_SEC.value in GLOBAL_BUFFER["events"]:
-            vis_rays_per_sec = GLOBAL_BUFFER["events"][EventName.VIS_RAYS_PER_SEC.value]["avg"]
-        else:
-            vis_rays_per_sec = train_rays_per_sec
+        #if EventName.VIS_RAYS_PER_SEC.value in GLOBAL_BUFFER["events"]:
+        #    vis_rays_per_sec = GLOBAL_BUFFER["events"][EventName.VIS_RAYS_PER_SEC.value]["avg"]
+        #else:
+        vis_rays_per_sec = 800000
 
-        current_fps = self.moving_fps if self.camera_moving else self.static_fps
+        #print(self.moving_fps, self.static_fps)
+        current_fps =  self.moving_fps if self.camera_moving else self.static_fps
 
         # calculate number of rays that can be rendered given the target fps
         num_vis_rays = vis_rays_per_sec / current_fps * (1 - target_train_util)
@@ -1582,7 +1586,7 @@ class ViewerStateForRender:
             image_width = self.max_resolution
             image_height = int(image_width / aspect_ratio)
 
-        image_height, image_width = 50, 100
+        #image_height, image_width = 50, 100
         return image_height, image_width
 
     def _process_invalid_output(self, output_type: str) -> str:
@@ -1645,7 +1649,7 @@ class ViewerStateForRender:
 
         # Calculate camera pose and intrinsics
         try:
-            image_height, image_width = 50, 100 #self._calculate_image_res(camera_object, is_training)
+            image_height, image_width = self._calculate_image_res(camera_object, is_training)
         except ZeroDivisionError as e:
             self.vis["renderingState/log_errors"].write("Error: Screen too small; no rays intersecting scene.")
             time.sleep(0.03)  # sleep to allow buffer to reset
